@@ -13,6 +13,9 @@ use PHPUnit\TextUI\ResultPrinter;
  */
 final class Command extends BaseCommand
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function handleArguments(array $argv): void
     {
         $this->arguments['printer'] = Printer::class;
