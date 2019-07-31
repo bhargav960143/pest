@@ -49,7 +49,7 @@ PASS  ./sum.php
 
 Often while writing tests you have some setup work that needs to happen before tests run, and you have some finishing work that needs to happen after tests run. Pest provides helper functions to handle this.
 
-```
+```php
 # Runs before each test on this file
 beforeEach(function () {
   migrateDatabase();
@@ -73,7 +73,7 @@ test('city database has San Juan', (function () {
 
 In some cases, you only need to do setup once, at the beginning of a file. This can be especially bothersome when the setup is asynchronous, so you can't just do it inline. Pest provides beforeAll and afterAll to handle this situation.
 
-```
+```php
 # Runs before the first test of the file
 beforeAll(function () {
   migrateDatabase();
@@ -95,7 +95,7 @@ test('city database has San Juan', function () {
 
 It may help to illustrate the order of execution of all hooks.
 
-```
+```php
 beforeAll(function () { echo 'beforeAll'); };
 afterAll(function () { echo 'afterAll'); };
 beforeEach(function () { echo 'beforeEach'); };
