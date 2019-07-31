@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace NunoMaduro\Pest\Console;
 
+use NunoMaduro\Pest\Execution;
 use NunoMaduro\Pest\Extensions\AfterLastTest;
 use NunoMaduro\Pest\TestSuite;
 use PHPUnit\TextUI\Command as BaseCommand;
@@ -24,7 +25,10 @@ final class Command extends BaseCommand
         $this->arguments['colors'] = $this->arguments['colors'] ?? ResultPrinter::COLOR_ALWAYS;
 
         parent::handleArguments($argv);
-        $this->arguments['test'] = new TestSuite();
+
+        foreach (Execution::getClosureTests() as $test) {
+            $this->arguments['test']->addTest($test);
+        }
     }
 
     protected function createRunner(): TestRunner

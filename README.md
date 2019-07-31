@@ -41,11 +41,9 @@ PASS  ./sum.php
 
 ## 📚 Documentation
 
-### Preface
-
 Pest aims to work out of the box, config free, on most PHP/PHPUnit projects.
 
-Our goal is create a delightful PHP Testing Framework with a focus on simplicity - with ideas coming from a line between **[PHPUnit](https://phpunit.de)** and **[Jest](https://jestjs.io)**.
+Our goal is create a **delightful PHP Testing Framework** with a focus on simplicity - with ideas coming from a line between **[PHPUnit](https://phpunit.de)** and **[Jest](https://jestjs.io)**.
 
 ### Writing tests
 
