@@ -147,7 +147,8 @@ test('', function () { echo 'test 2'); };
 
 ### Mocks
 
-
+The given closure to the `test`|`it` method is bound to a tipical `PHPUnit\Framework\TestCase`. For mocks, you
+can optionally create a mock using the `$this->createMock` method.
 
 ```php
 interface Foo
@@ -165,6 +166,8 @@ it('works fine with mocks', function () {
 ```
 
 ### Migrating to Pest from PHPUnit
+
+No migration need. It just works.
 
 ### Configuration
 

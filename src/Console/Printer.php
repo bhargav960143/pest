@@ -6,9 +6,11 @@ namespace NunoMaduro\Pest\Console;
 
 use NunoMaduro\Pest\ClosureTest;
 use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\BaseTestRunner;
 use PHPUnit\Runner\PhptTestCase;
 use PHPUnit\Runner\Version;
+use PHPUnit\TextUI\TestRunner;
 use PHPUnit\Util\Color;
 use PHPUnit\Util\TestDox\CliTestDoxPrinter;
 
@@ -19,8 +21,8 @@ final class Printer extends CliTestDoxPrinter
 {
     private const STATUS_STYLES = [
         BaseTestRunner::STATUS_PASSED => [
-            'symbol' => 'PASS',
-            'color' => 'bg-green,fg-black',
+            'symbol' => '✔',
+            'color' => 'fg-green',
         ],
         BaseTestRunner::STATUS_ERROR => [
             'symbol' => '✘',
@@ -62,14 +64,27 @@ final class Printer extends CliTestDoxPrinter
     protected function formatClassName(Test $test): string
     {
         if (! $test instanceof ClosureTest) {
-            return \get_class($test);
+            $reflector = new \ReflectionClass($test);
+            $file = (string) $reflector->getFileName();
+        } else {
+            $file = $test->getFile();
         }
 
-        $file = $test->getFile();
-        $relativeFile = explode('/tests/', $file)[1];
-        $parts = explode('/', $relativeFile);
-        $last = array_pop($parts);
-        return Color::dim(implode('/', $parts)) . '/' . $last;
+        if (\strpos(strtolower($file), 'tests') !== 0) {
+            $file = \substr($file, (int) \strpos(strtolower($file), 'tests'));
+        }
+
+        if ($test instanceof TestCase) {
+            if ($test->getStatus() === TestRunner::STATUS_PASSED) {
+                $textBox = $this->colorizeTextBox('bg-green,fg-black', ' PASS ');
+            } else {
+                $textBox = $this->colorizeTextBox('bg-red,fg-black', ' FAIL ');
+            }
+        } else {
+            $textBox = '';
+        }
+
+        return $textBox . ' ' . Color::dim(dirname($file) . '/') . basename($file);
     }
 
     public function write(string $buffer): void
@@ -95,9 +110,9 @@ final class Printer extends CliTestDoxPrinter
         // suite header
         if ($prevResult['className'] !== $result['className']) {
             $this->write($this->colorizeTextBox(
-                'underlined',
-                $result['className']
-            ) . \PHP_EOL);
+                    'underlined',
+                    $result['className']
+                ) . \PHP_EOL);
         }
 
         // test result line
