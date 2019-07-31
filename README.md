@@ -41,9 +41,44 @@ PASS  ./sum.php
 
 ## 📚 Documentation
 
-### Testing
+### Preface
 
-### Assertions
+Pest aims to work out of the box, config free, on most PHP/PHPUnit projects.
+
+Our goal is create a delightful PHP Testing Framework with a focus on simplicity - with ideas coming from a line between **[PHPUnit](https://phpunit.de)** and **[Jest](https://jestjs.io)**.
+
+### Writing tests
+
+All you need in a test file is the `test` or `it` method which runs a test. For example, let's say there's a function `inchesOfRain()` that should be `0`. Your whole test could be:
+
+```php
+test('did not rain', function () {
+    assertEquals(0, Weather::inchesOfRain());
+});
+
+# Or, also under the alias `it`
+it('did not rain', function () {
+    assertEquals(0, Weather::inchesOfRain());
+});
+```
+
+### Using Assertions
+
+Pest uses "assertions" to let you test values in different ways.
+
+```php
+it('has something', (function () {
+    assertTrue(true);
+    assertFalse(false);
+    assertCount(1, ['foo']);
+    assertEmpty([]);
+    assertEquals('bar', 'bar');
+    assertStringContainsString('bar', 'foobarbaz');
+    // ...
+});
+```
+
+For the full list, see the expect [Assertations Doc from PHPUnit](https://phpunit.readthedocs.io/en/latest/assertions.html).
 
 ### Setup and Teardown
 
@@ -52,12 +87,12 @@ Often while writing tests you have some setup work that needs to happen before t
 ```php
 # Runs before each test on this file
 beforeEach(function () {
-    migrateDatabase();
+    Database::migrate();
 });
 
 # Runs after each test on this file
 afterEach(function () {
-    deleteDatabase();
+    Database::delete();
 });
 
 test('city database has Vienna', (function () {
@@ -76,12 +111,12 @@ In some cases, you only need to do setup once, at the beginning of a file. This 
 ```php
 # Runs before the first test of the file
 beforeAll(function () {
-    migrateDatabase();
+    Database::migrate();
 });
 
 # Runs after the last test of the file
 afterAll(function () {
-    deleteDatabase();
+    Database::delete();
 });
 
 test('city database has Vienna', function () {
@@ -93,16 +128,19 @@ test('city database has San Juan', function () {
 });
 ```
 
-It may help to illustrate the order of execution of all hooks.
+This may help to illustrate the order of execution:
 
 ```php
 beforeAll(function () { echo 'beforeAll'); };
 afterAll(function () { echo 'afterAll'); };
 beforeEach(function () { echo 'beforeEach'); };
 afterEach(function () { echo 'afterEach'); };
-test('', function () { echo 'test'); };
-
+test('', function () { echo 'test 1'); };
+test('', function () { echo 'test 2'); };
 // beforeAll
+// beforeEach
+// test
+// afterEach
 // beforeEach
 // test
 // afterEach
@@ -111,9 +149,13 @@ test('', function () { echo 'test'); };
 
 ### Mocks
 
+@todo
+
 ### Migrating to Pest from PHPUnit
 
 ### Configuration
+
+Pest uses your base `phpunit.xml` configuration file.
 
 ## 💖 Support the development
 **Do you like this project? Support it by donating**
