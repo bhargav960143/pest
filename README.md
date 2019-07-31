@@ -52,20 +52,20 @@ Often while writing tests you have some setup work that needs to happen before t
 ```php
 # Runs before each test on this file
 beforeEach(function () {
-  migrateDatabase();
+    migrateDatabase();
 });
 
 # Runs after each test on this file
 afterEach(function () {
-  deleteDatabase();
+    deleteDatabase();
 });
 
 test('city database has Vienna', (function () {
-  assertTrue(City::exists('San Juan'));
+    assertTrue(City::exists('San Juan'));
 });
 
 test('city database has San Juan', (function () {
-  assertTrue(City::exists('San Juan'));
+    assertTrue(City::exists('San Juan'));
 });
 ```
 
@@ -76,20 +76,20 @@ In some cases, you only need to do setup once, at the beginning of a file. This 
 ```php
 # Runs before the first test of the file
 beforeAll(function () {
-  migrateDatabase();
+    migrateDatabase();
 });
 
 # Runs after the last test of the file
 afterAll(function () {
-  deleteDatabase();
+    deleteDatabase();
 });
 
 test('city database has Vienna', function () {
-  assertTrue(City::exists('San Juan'));
+    assertTrue(City::exists('San Juan'));
 });
 
 test('city database has San Juan', function () {
-  assertTrue(City::exists('San Juan'));
+    assertTrue(City::exists('San Juan'));
 });
 ```
 
