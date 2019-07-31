@@ -44,7 +44,7 @@ final class ClosureTest extends TestCase
         Closure $before,
         Closure $after
     ) {
-        parent::__construct('__invoke');
+        parent::__construct('runTest');
 
         $this->file = $file;
         $this->description = $description;
@@ -67,7 +67,7 @@ final class ClosureTest extends TestCase
         call_user_func(Closure::bind($this->after, $this, self::class));
     }
 
-    public function __invoke(): void
+    public function runTest(): void
     {
         call_user_func(Closure::bind($this->test, $this, self::class));
     }

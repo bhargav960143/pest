@@ -7,6 +7,7 @@ namespace NunoMaduro\Pest\Console;
 use NunoMaduro\Pest\Execution;
 use NunoMaduro\Pest\Extensions\AfterLastTest;
 use NunoMaduro\Pest\TestSuite;
+use PHPUnit\Framework\WarningTestCase;
 use PHPUnit\TextUI\Command as BaseCommand;
 use PHPUnit\TextUI\ResultPrinter;
 use PHPUnit\TextUI\TestRunner;
@@ -26,8 +27,26 @@ final class Command extends BaseCommand
 
         parent::handleArguments($argv);
 
+        /** @var \PHPUnit\Framework\TestSuite $testSuite */
+        $testSuite = $this->arguments['test'];
+
+        $testSuites = $testSuite->tests();
+
+        foreach ($testSuites as $testSuite) {
+
+            $tests = $testSuite->tests();
+
+            foreach ($tests as $key => $test) {
+                if ($test instanceof WarningTestCase && $test->getMessage() === 'No tests found in class "NunoMaduro\Pest\ClosureTest".') {
+                    unset($tests[$key]);
+                }
+            }
+
+            $testSuite->setTests($tests);
+        }
+
         foreach (Execution::getClosureTests() as $test) {
-            $this->arguments['test']->addTest($test);
+            $testSuite->addTest($test);
         }
     }
 
