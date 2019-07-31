@@ -27,7 +27,7 @@ composer require nunomaduro/pest --dev
 
 Then, create a file named `tests/sum.php`. This will contain our actual test:
 ```php
-it('adds 1 + 2 to equal 3', function () {
+test('adds 1 + 2 to equal 3', function () {
     assertEquals(3, Math::sum(1,2));
 });
 ```
@@ -38,6 +38,82 @@ Finally, run `vendor/bin/pest ` and pest will print this message:
 PASS  ./sum.php
 ✓ adds 1 + 2 to equal 3 (5ms)
 ```
+
+## 📚 Documentation
+
+### Testing
+
+### Assertions
+
+### Setup and Teardown
+
+Often while writing tests you have some setup work that needs to happen before tests run, and you have some finishing work that needs to happen after tests run. Pest provides helper functions to handle this.
+
+```
+# Runs before each test on this file
+beforeEach(function () {
+  migrateDatabase();
+});
+
+# Runs after each test on this file
+afterEach(function () {
+  deleteDatabase();
+});
+
+test('city database has Vienna', (function () {
+  assertTrue(City::exists('San Juan'));
+});
+
+test('city database has San Juan', (function () {
+  assertTrue(City::exists('San Juan'));
+});
+```
+
+### One-Time Setup
+
+In some cases, you only need to do setup once, at the beginning of a file. This can be especially bothersome when the setup is asynchronous, so you can't just do it inline. Pest provides beforeAll and afterAll to handle this situation.
+
+```
+# Runs before the first test of the file
+beforeAll(function () {
+  migrateDatabase();
+});
+
+# Runs after the last test of the file
+afterAll(function () {
+  deleteDatabase();
+});
+
+test('city database has Vienna', function () {
+  assertTrue(City::exists('San Juan'));
+});
+
+test('city database has San Juan', function () {
+  assertTrue(City::exists('San Juan'));
+});
+```
+
+It may help to illustrate the order of execution of all hooks.
+
+```
+beforeAll(function () { echo 'beforeAll'); };
+afterAll(function () { echo 'afterAll'); };
+beforeEach(function () { echo 'beforeEach'); };
+afterEach(function () { echo 'afterEach'); };
+test('', function () { echo 'test'); };
+
+// beforeAll
+// beforeEach
+// test
+// afterEach
+// beforeAll
+```
+
+### Mocks
+
+### Migrating to Pest from PHPUnit
+
+### Configuration
 
 ## 💖 Support the development
 **Do you like this project? Support it by donating**
