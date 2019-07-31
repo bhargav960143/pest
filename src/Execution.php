@@ -14,8 +14,6 @@ use ReflectionFunction;
 final class Execution extends BaseTestSuite
 {
     /**
-     * @readonly
-     *
      * @var array<int, ClosureTest>
      */
     private static $closureTests = [];
@@ -36,9 +34,11 @@ final class Execution extends BaseTestSuite
     private static $afterEach = [];
 
     /**
+     * @readonly
+     *
      * @var array<string, \Closure>
      */
-    private static $afterAll = [];
+    public static $afterAll = [];
 
     /**
      * @return array<int, ClosureTest>
@@ -72,11 +72,11 @@ final class Execution extends BaseTestSuite
     {
         $file = self::getFileName($closure);
 
-        $defaultClosure = Closure::fromCallable(function(): void {
+        $defaultClosure = Closure::fromCallable(function (): void {
         });
 
         $before = self::$beforeEach[$file] ?? $defaultClosure;
-        $after = self::$afterEach[$file] ??  $defaultClosure;
+        $after = self::$afterEach[$file] ?? $defaultClosure;
 
         $test = new ClosureTest($file, $description, $closure, $before, $after);
 

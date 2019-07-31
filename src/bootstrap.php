@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use NunoMaduro\Pest\Exceptions\NotImplementedYet;
 use NunoMaduro\Pest\Execution;
 
 include __DIR__ . '/../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
@@ -34,5 +33,5 @@ function afterEach(Closure $closure): void
 
 function afterAll(Closure $closure): void
 {
-    throw new NotImplementedYet('Not implemented yet.');
+    Execution::afterAll($closure);
 }
