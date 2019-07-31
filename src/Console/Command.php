@@ -6,7 +6,7 @@ namespace NunoMaduro\Pest\Console;
 
 use NunoMaduro\Pest\Execution;
 use NunoMaduro\Pest\Extensions\AfterLastTest;
-use NunoMaduro\Pest\TestSuite;
+use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\WarningTestCase;
 use PHPUnit\TextUI\Command as BaseCommand;
 use PHPUnit\TextUI\ResultPrinter;
@@ -30,20 +30,7 @@ final class Command extends BaseCommand
         /** @var \PHPUnit\Framework\TestSuite $testSuite */
         $testSuite = $this->arguments['test'];
 
-        $testSuites = $testSuite->tests();
-
-        foreach ($testSuites as $testSuite) {
-
-            $tests = $testSuite->tests();
-
-            foreach ($tests as $key => $test) {
-                if ($test instanceof WarningTestCase && $test->getMessage() === 'No tests found in class "NunoMaduro\Pest\ClosureTest".') {
-                    unset($tests[$key]);
-                }
-            }
-
-            $testSuite->setTests($tests);
-        }
+        $this->removeTestClosureWarnings($testSuite);
 
         foreach (Execution::getClosureTests() as $test) {
             $testSuite->addTest($test);
@@ -59,5 +46,22 @@ final class Command extends BaseCommand
         }
 
         return $testRunner;
+    }
+
+    private function removeTestClosureWarnings(TestSuite $testSuite): void
+    {
+        $tests = $testSuite->tests();
+
+        foreach ($tests as $key => $test) {
+            if ($test instanceof TestSuite) {
+                $this->removeTestClosureWarnings($test);
+            }
+
+            if ($test instanceof WarningTestCase && $test->getMessage() === 'No tests found in class "NunoMaduro\Pest\ClosureTest".') {
+                unset($tests[$key]);
+            }
+        }
+
+        $testSuite->setTests($tests);
     }
 }
